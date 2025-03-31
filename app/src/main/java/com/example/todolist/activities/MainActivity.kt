@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         // en el recycler view
 
 // usamos las func Lambda para que al darle click en un texto , podamos modificar el texto de la tarea.
-        adapter = TaskAdapter(emptyList()) { position ->
+        adapter = TaskAdapter(emptyList(), { position ->
             // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
             val task = taskList[position]
 
@@ -45,7 +45,15 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, TaskActivity::class.java)
             intent.putExtra(TaskActivity.TASK_ID, task.id)
             startActivity(intent)
-        }
+        },{position ->// AQUI VA LA SEGUNDA FUNC LAMBDA que usaremos para Borrar la tarea al presionar el boton de borrar
+
+            val task = taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
+
+            taskDAO.delete(task) // usamos la funcion delete de la clase TaskDAO para borrar la tarea de la base de datos
+
+            refreshData() // por ultimo llamamos a la funcion que refresca los datos del recycler view
+
+        })
         // asignamos el adapter al recycler view
         binding.recyclerView.adapter = adapter
         // asignamos el layout manager al recycler view
@@ -60,7 +68,12 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        taskList = taskDAO.findAll()
-        adapter.updateItems(taskList)
+        refreshData()
+
+    }
+
+    fun refreshData(){
+        taskList = taskDAO.findAll()// usamos la funcion findAll de la clase TaskDAO para obtener todas las tareas de la base de datos
+        adapter.updateItems(taskList)// usamos la funcion updateItems de la clase TaskAdapter para actualizar los datos del recycler view
     }
 }
