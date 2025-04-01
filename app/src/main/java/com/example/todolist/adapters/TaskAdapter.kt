@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.todolist.data.Task
 import com.example.todolist.databinding.ItemTaskBinding
+import com.example.todolist.utils.addStrikethrough
+import com.example.todolist.utils.changeColorText
 
 class TaskAdapter(
     var items: List<Task>,// creamos una variable items de tipo List<Task> que sera la lista de tareas que se mostrarán en el recycler view
@@ -49,7 +51,13 @@ class TaskAdapter(
 class TaskViewHolder(val binding: ItemTaskBinding) : ViewHolder(binding.root) {
 
     fun render(task: Task) {
-        binding.titleTextView.text = task.title
+        if (task.done) {
+            binding.titleTextView.text = task.title.addStrikethrough()
+           // binding.titleTextView.setTextColor(binding.root.context.getColor(android.R.color.holo_green_dark))
+        } else {
+            //binding.titleTextView.text = task.title
+            binding.titleTextView.text=task.title.changeColorText()
+        }
         binding.doneCheckBox.isChecked = task.done
     }
 }

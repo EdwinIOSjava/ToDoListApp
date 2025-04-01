@@ -45,12 +45,15 @@ class MainActivity : AppCompatActivity() {
                 val task = taskList[position]
 
                 val intent = Intent(this, TaskActivity::class.java)
-                intent.putExtra(TaskActivity.TASK_ID, task.id)// aqui le pasamos el id de la tarea que se ha pulsado en el recycler view a la actividad TaskActivity para que pueda ser editada
+                intent.putExtra(
+                    TaskActivity.TASK_ID,
+                    task.id
+                )// aqui le pasamos el id de la tarea que se ha pulsado en el recycler view a la actividad TaskActivity para que pueda ser editada
                 startActivity(intent)
             },
-                ::deleteTaskFuntionLambda, // esta es la seguda funcion Lambda pero la hemos  bautizado y creado a lo ultimo para ejemplificar que se puede hacer asi
-                ::doneCheckBoxFuntionLambda //  tercera funcion Lambda que se ejecuta cuando se hace click en el checkbox
-            )
+            ::deleteTaskFuntionLambda, // esta es la seguda funcion Lambda pero la hemos  bautizado y creado a lo ultimo para ejemplificar que se puede hacer asi
+            ::doneCheckBoxFuntionLambda
+        )
         // asignamos el adapter al recycler view
         binding.recyclerView.adapter = adapter
         // asignamos el layout manager al recycler view
@@ -76,10 +79,11 @@ class MainActivity : AppCompatActivity() {
         adapter.updateItems(taskList)// usamos la funcion updateItems de la clase TaskAdapter para actualizar los datos del recycler view
     }
 
-    fun deleteTaskFuntionLambda(position: Int){
+    fun deleteTaskFuntionLambda(position: Int) {
         // AQUI VA LA SEGUNDA FUNC LAMBDA que usaremos para Borrar la tarea al presionar el boton de borrar
 
-        val task =taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
+        val task =
+            taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
 
         AlertDialog.Builder(this)
             .setTitle("Delete task")
@@ -88,12 +92,16 @@ class MainActivity : AppCompatActivity() {
                 taskDAO.delete(task) // usamos la funcion delete de la clase TaskDAO para borrar la tarea de la base de datos
                 refreshData() // por ultimo llamamos a la funcion que refresca los datos del recycler view
             }
-            .setNegativeButton(android.R.string.cancel, null)// no haremos nada-- usamos R.string.cancel porque ya existe en el android  y el mismo lo traduce
+            .setNegativeButton(
+                android.R.string.cancel,
+                null
+            )// no haremos nada-- usamos R.string.cancel porque ya existe en el android  y el mismo lo traduce
             .setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
             .show()
     }
-    fun doneCheckBoxFuntionLambda (position: Int) {
-        val task =taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
+
+    fun doneCheckBoxFuntionLambda(position: Int) {
+        val task =  taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
 
         task.done = !task.done // aqui cambiamos el valor de la variable done de la tarea que se ha pulsado en el recycler view
         taskDAO.update(task)// usamos la funcion update de la clase TaskDAO para actualizar la tarea en la base de datos
