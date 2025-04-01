@@ -2,6 +2,7 @@ package com.example.todolist.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -82,8 +83,7 @@ class MainActivity : AppCompatActivity() {
     fun deleteTaskFuntionLambda(position: Int) {
         // AQUI VA LA SEGUNDA FUNC LAMBDA que usaremos para Borrar la tarea al presionar el boton de borrar
 
-        val task =
-            taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
+        val task =taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
 
         AlertDialog.Builder(this)
             .setTitle("Delete task")
@@ -101,10 +101,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun doneCheckBoxFuntionLambda(position: Int) {
-        val task =  taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
+        val task =taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
 
-        task.done = !task.done // aqui cambiamos el valor de la variable done de la tarea que se ha pulsado en el recycler view
+        task.done =!task.done // aqui cambiamos el valor de la variable done de la tarea que se ha pulsado en el recycler view
         taskDAO.update(task)// usamos la funcion update de la clase TaskDAO para actualizar la tarea en la base de datos
         refreshData()// por ultimo llamamos a la funcion que refresca los datos del recycler view
+    }
+// en esta funcion Lambda vamos a modificar la tarea en un AlertDialog
+    // aun no se usa
+    fun modifyTask(position: Int) {
+
+        // aqui vamos a modificar la tarea en un AlertDialog
+        val task =taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
+
+        val textoEditado = EditText(this)
+        textoEditado.setText(task.title)
+        textoEditado.setSelection(textoEditado.text.length)
+
+        AlertDialog.Builder(this)
+            .setTitle("Edit task")
+            .setView (textoEditado)
+            .setPositiveButton("Guardar") { _, _ ->
+                taskDAO.delete(task) // usamos la funcion delete de la clase TaskDAO para borrar la tarea de la base de datos
+                refreshData() // por ultimo llamamos a la funcion que refresca los datos del recycler view
+            }
+            .setNegativeButton(
+                android.R.string.cancel,
+                null
+            )// no haremos nada-- usamos R.string.cancel porque ya existe en el android  y el mismo lo traduce
+            .setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
+            .show()
     }
 }
