@@ -12,7 +12,7 @@ class TaskAdapter(
     var items: List<Task>,// creamos una variable items de tipo List<Task> que sera la lista de tareas que se mostrarán en el recycler view
     val onClick: (Int) -> Unit,// esta es una funcion lambda que se ejecuta cuando se hace click en un elemento del recycler view y recibe la posicion del elemento en el recycler view
     val onDelete: (Int) -> Unit, // onDelete es el nombre de esta funci Lambda que se ejecuta cuando se hace click en el boton de borrar
-    val doneCheckBox: (Int) ->Unit// se oprie el checkbox
+    val onCheckBox: (Int) ->Unit// se oprie el checkbox
 ) : Adapter<TaskViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -32,10 +32,10 @@ class TaskAdapter(
             onDelete(position)// aqui llamamos a la funcion que se ejecuta cuando se hace click en el boton de borrar
             // en este caso la funcion onDelete  fue el nombre que le dimos como funcion lambda en el constructor de la clase TaskAdapter
         }
-        holder.binding.doneCheckBox.setOnClickListener{
-
-
-            // a
+        holder.binding.doneCheckBox.setOnCheckedChangeListener { _ , _ ->
+            if (holder.binding.doneCheckBox.isPressed) {
+                onCheckBox(position)
+            }
         }
 
     }

@@ -95,6 +95,8 @@ class MainActivity : AppCompatActivity() {
     fun doneCheckBoxFuntionLambda (position: Int) {
         val task =taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
 
-      //binding.
+        task.done = !task.done // aqui cambiamos el valor de la variable done de la tarea que se ha pulsado en el recycler view
+        taskDAO.update(task)// usamos la funcion update de la clase TaskDAO para actualizar la tarea en la base de datos
+        refreshData()// por ultimo llamamos a la funcion que refresca los datos del recycler view
     }
 }
