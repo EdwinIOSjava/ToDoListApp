@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra(TaskActivity.TASK_ID, task.id)// aqui le pasamos el id de la tarea que se ha pulsado en el recycler view a la actividad TaskActivity para que pueda ser editada
                 startActivity(intent)
             },
-
-                ::deleteTaskFuntionLambda // esta es la seguda funcion Lambda pero la hemos  bautizado y creado a lo ultimo para ejemplificar que se puede hacer asi
+                ::deleteTaskFuntionLambda, // esta es la seguda funcion Lambda pero la hemos  bautizado y creado a lo ultimo para ejemplificar que se puede hacer asi
+                ::doneCheckBoxFuntionLambda //  tercera funcion Lambda que se ejecuta cuando se hace click en el checkbox
             )
         // asignamos el adapter al recycler view
         binding.recyclerView.adapter = adapter
@@ -75,9 +75,7 @@ class MainActivity : AppCompatActivity() {
             taskDAO.findAll()// usamos la funcion findAll de la clase TaskDAO para obtener todas las tareas de la base de datos
         adapter.updateItems(taskList)// usamos la funcion updateItems de la clase TaskAdapter para actualizar los datos del recycler view
     }
-    fun editTaskFuntionLambda(position: Int){
 
-    }
     fun deleteTaskFuntionLambda(position: Int){
         // AQUI VA LA SEGUNDA FUNC LAMBDA que usaremos para Borrar la tarea al presionar el boton de borrar
 
@@ -93,7 +91,10 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton(android.R.string.cancel, null)// no haremos nada-- usamos R.string.cancel porque ya existe en el android  y el mismo lo traduce
             .setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
             .show()
+    }
+    fun doneCheckBoxFuntionLambda (position: Int) {
+        val task =taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
 
-
+      //binding.
     }
 }

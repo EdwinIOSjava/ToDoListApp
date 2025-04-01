@@ -1,9 +1,9 @@
 package com.example.todolist.data
 
 class Task(
-    val id:Long,
-    val title:String,
-    val done:Boolean = false//si esta hecha o no
+    var id:Long,
+    var title:String,
+    var done:Boolean = false//si esta hecha o no
 ) {
 
     companion object{
