@@ -12,13 +12,14 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:title=""
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintTop_toTopOf="parent">
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_todolist"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
             android:layout_marginHorizontal="10dp"/>
         <TextView
             android:id="@+id/toolbarTitle"
@@ -28,7 +29,7 @@
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_gravity="center" />
+            android:layout_gravity="start" />
 
     </androidx.appcompat.widget.Toolbar>
 
