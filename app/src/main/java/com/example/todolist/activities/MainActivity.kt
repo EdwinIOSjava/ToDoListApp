@@ -2,6 +2,8 @@ package com.example.todolist.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -40,7 +42,13 @@ class MainActivity : AppCompatActivity() {
         categoryDAO = CategoryDAO(this)
         // asignamos al adapter la lista de tareas vacia y una funcion lambda que se ejecuta cuando se hace click en un elemento del recycler view y recibe la posicion del elemento
         // en el recycler view
-        supportActionBar?.title = "Mis categorias"
+        //supportActionBar?.title = "Mis categorias"
+        setSupportActionBar(findViewById(R.id.myToolbar))// AGREGO EL APPBAR CREADO EN EL XML
+        supportActionBar?.setDisplayShowTitleEnabled(false)// ESTO  OCULTA EL TEXTOQ UE ME SALE POR DEFECTO
+
+
+
+
 // usamos las func Lambda para que al darle click en un texto , podamos modificar el texto de la tarea.
         adapter = CategoryAdapter(
             emptyList(),
@@ -137,4 +145,19 @@ class MainActivity : AppCompatActivity() {
             .setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
             .show()
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_add -> {
+                // Acción al hacer clic
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 }
