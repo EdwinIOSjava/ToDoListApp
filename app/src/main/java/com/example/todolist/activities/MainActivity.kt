@@ -2,6 +2,7 @@ package com.example.todolist.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -54,8 +55,9 @@ class MainActivity : AppCompatActivity() {
             emptyList(),
             ::showCategory,
             ::editCategory,
-            ::deleteCategoryFuntionLambda // esta es la seguda funcion Lambda pero la hemos  bautizado y creado a lo ultimo para ejemplificar que se puede hacer asi
+            ::deleteCategory // esta es la seguda funcion Lambda pero la hemos  bautizado y creado a lo ultimo para ejemplificar que se puede hacer asi
         )
+
         // asignamos el adapter al recycler view
         binding.recyclerView.adapter = adapter
         // asignamos el layout manager al recycler view
@@ -76,15 +78,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun refreshData() {
+
         //categoryList = categoryDAO.findAll()// usamos la funcion findAll de la clase CategoryDAO para obtener todas las tareas de la base de datos
         categoryList = categoryDAO.findAll()
         adapter.updateItems(categoryList)// usamos la funcion updateItems de la clase CategoryAdapter para actualizar los datos del recycler view
+        Log.i("MainActivity", "refreshData + ${categoryList}")
     }
 
     fun showCategory(position: Int){
         val category = categoryList[position]
 
-        val intent = Intent(this, TaskListActivity::class.java)
+        val intent = Intent(this ,TaskListActivity::class.java)
         intent.putExtra(TaskListActivity.CATEGORY_ID, category.id)
         startActivity(intent)
     }
@@ -98,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
 
     }
-    fun deleteCategoryFuntionLambda(position: Int) {
+    fun deleteCategory(position: Int) {
         // AQUI VA LA tercera FUNC LAMBDA que usaremos para Borrar la tarea al presionar el boton de borrar
 
         val category =categoryList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion

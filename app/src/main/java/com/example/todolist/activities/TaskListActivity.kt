@@ -87,6 +87,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
         task.done = !task.done
         taskDAO.update(task)
+        adapter.notifyItemChanged(position)
         refreshData()
     }
     private fun refreshData() {

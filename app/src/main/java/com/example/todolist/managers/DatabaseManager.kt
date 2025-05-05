@@ -9,7 +9,8 @@ import com.example.todolist.data.Task
 
 class DatabaseManager(context: Context) : SQLiteOpenHelper(
     context,
-    DATABASE_NAME, null,
+    DATABASE_NAME,
+    null,
     DATABASE_VERSION
 ) {
     companion object {

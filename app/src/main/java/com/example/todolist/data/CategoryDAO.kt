@@ -24,6 +24,7 @@ class CategoryDAO(context: Context) {
 
             Log.i("DATABASE", "Inserted category with id: $newRowId")
         } catch (e: Exception) {
+            Log.e("DATABASE", "Error inserting category")
             e.printStackTrace()
         } finally {
             db.close()
@@ -44,6 +45,7 @@ class CategoryDAO(context: Context) {
 
             Log.i("DATABASE", "Updated category with id: ${category.id}")
         } catch (e: Exception) {
+            Log.e("DATABASE", "Error updating category with id: ${category.id}")
             e.printStackTrace()
         } finally {
             db.close()
@@ -58,6 +60,7 @@ class CategoryDAO(context: Context) {
 
             Log.i("DATABASE", "Deleted category with id: ${category.id}")
         } catch (e: Exception) {
+            Log.e("DATABASE", "Error deleting category with id: ${category.id}")
             e.printStackTrace()
         } finally {
             db.close()
@@ -131,6 +134,7 @@ class CategoryDAO(context: Context) {
                 categoryList.add(category)
             }
         } catch (e: Exception) {
+            Log.e("DATABASE", "Error finding all categories")
             e.printStackTrace()
         } finally {
             db.close()

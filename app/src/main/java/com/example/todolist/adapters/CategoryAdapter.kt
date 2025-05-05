@@ -50,6 +50,6 @@ class CategoryAdapter(
 class CategoryViewHolder(val binding: ItemCategoryBinding) : ViewHolder(binding.root) {
 
     fun render(category: Category) {
-            binding.titleTextView.text = category.title.addStrikethrough()
+            binding.titleTextView.text = category.title
     }
 }
