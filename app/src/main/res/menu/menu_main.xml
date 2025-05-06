@@ -6,19 +6,20 @@
     <item
         android:id="@+id/check"
         android:icon="@drawable/ic_checkbox"
-        android:title="@string/agregar"
+        android:title="@string/check"
         app:showAsAction="ifRoom"
         />
     <item
-        android:id="@+id/action_add"
+        android:id="@+id/folders"
         android:icon="@drawable/ic_folders"
-        android:title="@string/agregar"
+        android:title="@string/folders"
         app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings"
-        android:title="@string/agregar"
-        app:showAsAction="ifRoom" />
+        android:title="@string/settings"
+        app:showAsAction="always" />
+
 </menu>
 

@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         // asignamos al adapter la lista de tareas vacia y una funcion lambda que se ejecuta cuando se hace click en un elemento del recycler view y recibe la posicion del elemento
         // en el recycler view
         //supportActionBar?.title = "Mis categorias"
+
         setSupportActionBar(findViewById(R.id.myToolbar))// AGREGO EL APPBAR CREADO EN EL XML
         supportActionBar?.setDisplayShowTitleEnabled(false)// ESTO  OCULTA EL TEXTOQ UE ME SALE POR DEFECTO
 
@@ -54,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         adapter = CategoryAdapter(
             emptyList(),
             ::showCategory,
-            ::editCategory,
+            ::modifyCategory,
             ::deleteCategory // esta es la seguda funcion Lambda pero la hemos  bautizado y creado a lo ultimo para ejemplificar que se puede hacer asi
         )
 
@@ -65,8 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         // asignamos el listener al boton de añadir tarea
         binding.addCategoryButton.setOnClickListener {
-            val intent = Intent(this, CategoryActivity::class.java)
-            startActivity(intent)
+            createCategory()
         }
     }
 
@@ -84,7 +87,35 @@ class MainActivity : AppCompatActivity() {
         adapter.updateItems(categoryList)// usamos la funcion updateItems de la clase CategoryAdapter para actualizar los datos del recycler view
         Log.i("MainActivity", "refreshData + ${categoryList}")
     }
+    fun createCategory() {
 
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("New Category")
+
+        // Crear un EditText para que el usuario escriba el nombre de la categoría
+        val input = EditText(this)
+        input.hint = "Nombre de la categoría"
+        builder.setView(input)
+
+        builder.setPositiveButton("Guardar") { dialog, _ ->
+            val categoryName = input.text.toString().trim()
+            if (categoryName.isNotEmpty()) {
+                // Crear la categoría y guardarla en SQLite
+                val newCategory = Category(-1,categoryName)
+                categoryDAO.insert(newCategory)
+                refreshData() // Para que se actualice la lista
+            }
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.cancel()
+        }
+
+        builder.show()
+
+
+    }
     fun showCategory(position: Int){
         val category = categoryList[position]
 
@@ -139,7 +170,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Edit category")
             .setView(textoEditado)
             .setPositiveButton("Guardar") { _, _ ->
-                categoryDAO.delete(category) // usamos la funcion delete de la clase CategoryDAO para borrar la tarea de la base de datos
+                categoryDAO.update(category) // usamos la funcion delete de la clase CategoryDAO para borrar la tarea de la base de datos
                 refreshData() // por ultimo llamamos a la funcion que refresca los datos del recycler view
             }
             .setNegativeButton(
@@ -156,12 +187,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_add -> {
+            R.id.folders -> {
                 // Acción al hacer clic
+                Toast.makeText(this, "Has pulsado en folders", Toast.LENGTH_SHORT).show()
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-}//hola
+}

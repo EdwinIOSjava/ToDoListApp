@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ToDoList</string>
     <string name="agregar">Agregar</string>
+    <string name="check">check</string>
+    <string name="folders">folders</string>
+    <string name="settings">settings</string>
 </resources>

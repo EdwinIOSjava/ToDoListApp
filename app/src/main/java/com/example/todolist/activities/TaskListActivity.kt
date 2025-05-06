@@ -52,7 +52,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
     categoryDAO=CategoryDAO(this)
     category=categoryDAO.findById(id)!!// aqui obtenemos la categoria que se ha pulsado en el recycler view apartir de su id
 
-    supportActionBar?.title = category.title
+
         // asignamos al adapter la lista de tareas vacia y una funcion lambda que se ejecuta cuando se hace click en un elemento del recycler view y recibe la posicion del elemento
         // en el recycler view
 
