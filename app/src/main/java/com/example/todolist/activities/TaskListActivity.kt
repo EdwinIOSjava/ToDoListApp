@@ -64,9 +64,9 @@ override fun onCreate(savedInstanceState: Bundle?) {
             ::checkTask
         )
         // asignamos el adapter al recycler view
-        binding.recyclerView.adapter = adapter
+        binding.rvTasks.adapter = adapter
         // asignamos el layout manager al recycler view
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.rvTasks.layoutManager = LinearLayoutManager(this)
 
         // asignamos el listener al boton de añadir tarea
         binding.addTaskButton.setOnClickListener {

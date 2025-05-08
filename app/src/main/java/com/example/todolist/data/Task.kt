@@ -7,6 +7,10 @@ class Task(
     var category: Category
 ) {
 
+    override fun toString(): String {
+        return "Task(id=$id, title=$title, done=$done)"
+    }
+
     companion object{
         const val TABLE_NAME = "tasks"
 
