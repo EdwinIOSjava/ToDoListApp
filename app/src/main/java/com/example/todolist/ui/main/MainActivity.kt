@@ -1,4 +1,4 @@
-package com.example.todolist.activities
+package com.example.todolist.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,10 +15,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.todolist.R
+import com.example.todolist.activities.TaskListActivity
 import com.example.todolist.adapters.CategoryAdapter
 import com.example.todolist.data.Category
 import com.example.todolist.data.CategoryDAO
-import com.example.todolist.data.Task
 import com.example.todolist.data.TaskDAO
 import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.data.CategoryWithTasks
@@ -91,13 +91,16 @@ class MainActivity : AppCompatActivity() {
         Log.i("MainActivity", "refreshData + ${categoryWithTasksList}")
     }
 
-    fun createCategory() {val dialogView = layoutInflater.inflate(R.layout.dialog_add_category, null)
+    fun createCategory() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_category, null)
         val editText = dialogView.findViewById<EditText>(R.id.categoryEditText)
 
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setCancelable(true)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
 // Botones
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity() {
     fun showCategory(position: Int){
         val category = categoryList[position]
 
-        val intent = Intent(this ,TaskListActivity::class.java)
+        val intent = Intent(this , TaskListActivity::class.java)
         intent.putExtra(TaskListActivity.CATEGORY_ID, category.id)
         startActivity(intent)
     }

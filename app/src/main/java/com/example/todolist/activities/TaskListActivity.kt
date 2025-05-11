@@ -2,7 +2,9 @@ package com.example.todolist.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -59,7 +61,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 // usamos las func Lambda para que al darle click en un texto , podamos modificar el texto de la tarea.
         adapter = TaskAdapter(
             emptyList(),
-            ::editTask,
+            ::modifyTask,
             ::deleteTaskFuntionLambda, // esta es la seguda funcion Lambda pero la hemos  bautizado y creado a lo ultimo para ejemplificar que se puede hacer asi
             ::checkTask
         )
@@ -70,9 +72,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
         // asignamos el listener al boton de añadir tarea
         binding.addTaskButton.setOnClickListener {
-            val intent = Intent(this, TaskActivity::class.java)
-            intent.putExtra(TaskActivity.CATEGORY_ID, category.id)
-            startActivity(intent)
+            createTask()
         }
     }
 
@@ -116,15 +116,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
             .setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
             .show()
     }
-    fun editTask(position: Int){
-        val task = taskList[position]
 
-        val intent = Intent(this, TaskActivity::class.java)
-        intent.putExtra(TaskActivity.TASK_ID, task.id)
-        intent.putExtra(TaskActivity.CATEGORY_ID, category.id)
-        startActivity(intent)
-
-    }
 
     fun doneCheckBoxFuntionLambda(position: Int) {
         val task =
@@ -135,14 +127,22 @@ override fun onCreate(savedInstanceState: Bundle?) {
         taskDAO.update(task)// usamos la funcion update de la clase TaskDAO para actualizar la tarea en la base de datos
         refreshData()// por ultimo llamamos a la funcion que refresca los datos del recycler view
     }
+    fun editTask(position: Int){
+        val task = taskList[position]
+
+        val intent = Intent(this, TaskActivity::class.java)
+        intent.putExtra(TaskActivity.TASK_ID, task.id)
+        intent.putExtra(TaskActivity.CATEGORY_ID, category.id)
+        startActivity(intent)
+
+    }
 
     // en esta funcion Lambda vamos a modificar la tarea en un AlertDialog
     // aun no se usa
     fun modifyTask(position: Int) {
 
         // aqui vamos a modificar la tarea en un AlertDialog
-        val task =
-            taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
+        val task = taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
 
         val textoEditado = EditText(this)
         textoEditado.setText(task.title)
@@ -152,8 +152,10 @@ override fun onCreate(savedInstanceState: Bundle?) {
             .setTitle("Edit task")
             .setView(textoEditado)
             .setPositiveButton("Guardar") { _, _ ->
-                taskDAO.delete(task) // usamos la funcion delete de la clase TaskDAO para borrar la tarea de la base de datos
+
+                taskDAO.update(task) // usamos la funcion delete de la clase TaskDAO para borrar la tarea de la base de datos
                 refreshData() // por ultimo llamamos a la funcion que refresca los datos del recycler view
+
             }
             .setNegativeButton(
                 android.R.string.cancel,
@@ -161,5 +163,43 @@ override fun onCreate(savedInstanceState: Bundle?) {
             )// no haremos nada-- usamos R.string.cancel porque ya existe en el android  y el mismo lo traduce
             .setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
             .show()
+    }
+    fun createTask() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_category, null)
+        val titleDialog = dialogView.findViewById<TextView>(R.id.dialogTitle)
+        titleDialog.text = "Crear tarea"
+        val editText = dialogView.findViewById<EditText>(R.id.categoryEditText)
+        editText.hint = "Nueva tarea"
+        editText.setText("")
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+// Botones
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+        val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
+
+        btnSave.setOnClickListener {
+            val taskName = editText.text.toString().trim()
+            if (taskName.isNotEmpty()) {
+                // Crear la categoría y guardarla en SQLite
+                val newTask = Task(-1, taskName,false, category)
+                // task = Task(-1L, "", false, category)
+                taskDAO.insert(newTask)
+                refreshData() // Para que se actualice la lista
+            }
+            dialog.dismiss() // Cierra el diálogo después de guardar
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss() // Cierra el diálogo si se cancela
+        }
+
+        dialog.show()
+
     }
 }
