@@ -35,11 +35,15 @@ class CategoryAdapter(
         holder.render(category)
 
         holder.itemView.setOnClickListener {
-            onClick(position)
+            onClick(holder.adapterPosition)
         }
         holder.itemView.setOnLongClickListener {
-            onEdit(position)
-            true
+            val pos = holder.adapterPosition // breakpoint aquí
+            Log.d("DEBUG", "Long click en posición: $pos")
+            onEdit(pos)
+            true/*
+            onEdit(holder.adapterPosition)
+            true*/
         }
 
     }

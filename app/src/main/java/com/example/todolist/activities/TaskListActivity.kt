@@ -27,17 +27,17 @@ class TaskListActivity : AppCompatActivity() {
     }
 
 
-lateinit var binding: ActivityTaskListBinding
+    lateinit var binding: ActivityTaskListBinding
 
-lateinit var taskDAO: TaskDAO
-lateinit var categoryDAO: CategoryDAO
-lateinit var taskList: List<Task>
+    lateinit var taskDAO: TaskDAO
+    lateinit var categoryDAO: CategoryDAO
+    lateinit var taskList: List<Task>
 
-lateinit var adapter: TaskAdapter
-lateinit var category: Category
+    lateinit var adapter: TaskAdapter
+    lateinit var category: Category
 
 
-override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
@@ -51,8 +51,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
         }
         val id = intent.getLongExtra(CATEGORY_ID, -1L)
         taskDAO = TaskDAO(this)
-    categoryDAO=CategoryDAO(this)
-    category=categoryDAO.findById(id)!!// aqui obtenemos la categoria que se ha pulsado en el recycler view apartir de su id
+        categoryDAO = CategoryDAO(this)
+        category = categoryDAO.findById(id)!!// aqui obtenemos la categoria que se ha pulsado en el recycler view apartir de su id
 
 
         // asignamos al adapter la lista de tareas vacia y una funcion lambda que se ejecuta cuando se hace click en un elemento del recycler view y recibe la posicion del elemento
@@ -82,6 +82,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         refreshData()
 
     }
+
     fun checkTask(position: Int) {
         val task = taskList[position]
 
@@ -90,6 +91,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         adapter.notifyItemChanged(position)
         refreshData()
     }
+
     private fun refreshData() {
         //taskList = taskDAO.findAll()// usamos la funcion findAll de la clase TaskDAO para obtener todas las tareas de la base de datos
         taskList = taskDAO.findAllByCategory(category)
@@ -127,7 +129,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
         taskDAO.update(task)// usamos la funcion update de la clase TaskDAO para actualizar la tarea en la base de datos
         refreshData()// por ultimo llamamos a la funcion que refresca los datos del recycler view
     }
-    fun editTask(position: Int){
+
+    fun editTask(position: Int) {
         val task = taskList[position]
 
         val intent = Intent(this, TaskActivity::class.java)
@@ -145,6 +148,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         val task = taskList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
 
         val textoEditado = EditText(this)
+
         textoEditado.setText(task.title)
         textoEditado.setSelection(textoEditado.text.length)
 
@@ -164,6 +168,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
             .setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
             .show()
     }
+
     fun createTask() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_category, null)
         val titleDialog = dialogView.findViewById<TextView>(R.id.dialogTitle)
@@ -187,7 +192,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
             val taskName = editText.text.toString().trim()
             if (taskName.isNotEmpty()) {
                 // Crear la categoría y guardarla en SQLite
-                val newTask = Task(-1, taskName,false, category)
+                val newTask = Task(-1, taskName, false, category)
                 // task = Task(-1L, "", false, category)
                 taskDAO.insert(newTask)
                 refreshData() // Para que se actualice la lista

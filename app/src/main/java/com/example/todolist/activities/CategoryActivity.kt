@@ -44,7 +44,7 @@ class CategoryActivity : AppCompatActivity() {
             supportActionBar?.title = "Editar categoría"
         } else {
             category = Category(-1L, "")
-            supportActionBar?.title = "Crear tarea"
+            supportActionBar?.title = "Crear Categoria"
         }
 
         binding.saveButton.setOnClickListener {

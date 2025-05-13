@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -61,8 +62,8 @@ class MainActivity : AppCompatActivity() {
 // usamos las func Lambda para que al darle click en un texto , podamos modificar el texto de la tarea.
         adapter = CategoryAdapter(
             categoryWithTasksList,
-            ::showCategory,
-            ::modifyCategory,
+            ::showCategory,// entrar en la categoria y sus tareas
+            ::createOrModifyCategory // aqui modificamos la categoria
             )
 
         // asignamos el adapter al recycler view
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
         // asignamos el listener al boton de añadir tarea
         binding.addCategoryButton.setOnClickListener {
-            createCategory()
+            createOrModifyCategory(-1) // Le  mandamos -1 para que se cree una nueva categoria
         }
     }
 
@@ -134,29 +135,58 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun modifyCategory(position: Int) {
+    fun createOrModifyCategory(position: Int) {
 
-        // aqui vamos a modificar la tarea en un AlertDialog
-        val category =
-            categoryList[position] // obtenemos la tarea que se ha pulsado en el recycler view apartir de su posicion
+        // creamos un condicional para saber si estamos creando o modificando una categoria
+Log.d("MainActivity", "createOrModifyCategory: $position")
+        if (position == -1) // si  es -1 es que estamos CREANDO una categoria
+        {
+            // AQUI SE CREA LA CATEGORIA
+            createCategory()
 
-        val textoEditado = EditText(this)
-        textoEditado.setText(category.title)
-        textoEditado.setSelection(textoEditado.text.length)
+        } else{
 
-        AlertDialog.Builder(this)
-            .setTitle("Edit category")
-            .setView(textoEditado)
-            .setPositiveButton("Guardar") { _, _ ->
-                categoryDAO.update(category) // usamos la funcion delete de la clase CategoryDAO para borrar la tarea de la base de datos
-                refreshData() // por ultimo llamamos a la funcion que refresca los datos del recycler view
+            // AQUI SE MODIFICA LA CATEGORIA
+            val category = categoryList[position] // obtenemos la categoria que se ha pulsado en el recycler view apartir de su posicion
+
+            val dialogView = layoutInflater.inflate(R.layout.dialog_add_category, null) // aqui cargamos el layout del dialogo para modificar o crear la categoria
+            val titleDialog = dialogView.findViewById<TextView>(R.id.dialogTitle) // aqui cambiamos el titulo del dialogo
+            titleDialog.text = "Editar categoría"
+
+            val textoEditado = dialogView.findViewById<EditText>(R.id.categoryEditText)
+            textoEditado.setText(category.title)
+            textoEditado.setSelection(textoEditado.text.length)
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            // Botones
+            val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+            val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
+
+            btnSave.setOnClickListener {
+                val categoryTitle = textoEditado.text.toString().trim()
+                if (categoryTitle.isNotEmpty())
+                {
+                    categoryDAO.update(category)
+                    refreshData()
+                }
+                dialog.dismiss() // Cierra el diálogo después de guardar
             }
-            .setNegativeButton(
-                android.R.string.cancel,
-                null
-            )// no haremos nada-- usamos R.string.cancel porque ya existe en el android  y el mismo lo traduce
-            .setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
-            .show()
+            btnCancel.setOnClickListener {
+                dialog.dismiss() // Cierra el diálogo si se cancela
+            }
+
+//                .setNegativeButton(
+//                    android.R.string.cancel,
+//                    null
+//                )// no haremos nada-- usamos R.string.cancel porque ya existe en el android  y el mismo lo traduce
+            //.setCancelable(false)// esto es para que si pulsamos fuera del dialogo no se cierre
+
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
